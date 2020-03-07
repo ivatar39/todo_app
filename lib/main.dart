@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_app/local_repository.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  final prefs = await SharedPreferences.getInstance();
+  final repository = LocalRepository(prefs);
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

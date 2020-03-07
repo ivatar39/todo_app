@@ -1,8 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/bloc/bloc.dart';
-import 'package:todo_app/todo.dart';
+import 'package:todo_app/local_repository.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
+  final LocalRepository _repository;
+
+  TodoBloc({LocalRepository repository})
+      : assert(repository != null),
+        _repository = repository;
+
   @override
   TodoState get initialState => TodoInitial();
 
@@ -10,24 +16,22 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   Stream<TodoState> mapEventToState(TodoEvent event) async* {
     if (event is AppStarted) {
       yield TodoLoading();
-      yield TodoLoaded(await fetchTodoList());
+      yield await fetchTodoList();
     }
     if (event is AddItem) {
       yield TodoLoading();
-      // TODO: yield TodoAdded();
+      await _repository.addTodo(event.newTodo);
+      yield await fetchTodoList();
     }
     if (event is DeleteItem) {
       yield TodoLoading();
-      // TODO: yield TodoDeleted();
+      await _repository.deleteTodo(event.id);
+      yield await fetchTodoList();
     }
   }
 
-  Future<List<Todo>> fetchTodoList() async {
-    List todoList = [];
-    todoList.add(Todo(task: 'Сделать дз по географии'));
-    todoList.add(Todo(task: 'Убрать комнату'));
-    todoList.add(Todo(task: 'Поужинать'));
-    await Future.delayed(Duration(seconds: 1));
-    return todoList;
+  Future<TodoState> fetchTodoList() async {
+    final todoList = _repository.getAllTodos();
+    return TodoLoaded(todoList);
   }
 }
