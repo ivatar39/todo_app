@@ -24,13 +24,4 @@ class DeleteItem extends TodoEvent {
   List<Object> get props => [id];
 }
 
-class ChangeItemStatus extends TodoEvent {
-  final bool status;
-
-  ChangeItemStatus(this.status);
-
-  @override
-  List<Object> get props => [status];
-}
-
 class AppStarted extends TodoEvent {}
