@@ -6,12 +6,14 @@ import 'package:todo_app/local_repository.dart';
 import 'package:todo_app/pages/main_page.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final prefs = await SharedPreferences.getInstance();
   final repository = LocalRepository(prefs);
 
   runApp(
     BlocProvider(
-      create: (context) => TodoBloc(repository: repository),
+      create: (context) => TodoBloc(repository: repository)..add(AppStarted()),
       child: TodoApp(),
     ),
   );

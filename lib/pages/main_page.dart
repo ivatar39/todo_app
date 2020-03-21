@@ -38,25 +38,29 @@ class _MainPageState extends State<MainPage> {
                       context: context,
                       builder: (context) {
                         return Container(
-                          height: 200,
-                          child: Column(
-                            children: <Widget>[
-                              TextField(
-                                decoration:
-                                    InputDecoration(hintText: 'Введите задачу'),
-                                controller: controller,
-                              ),
-                              RaisedButton(
-                                child: Text('Добавить'),
-                                onPressed: () {
-                                  BlocProvider.of<TodoBloc>(context)
-                                      .add(AddItem(Todo(
-                                    task: controller.text,
-                                    id: state.todoList.length + 1,
-                                  )));
-                                },
-                              )
-                            ],
+                          height: 400,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                TextField(
+                                  decoration: InputDecoration(
+                                      hintText: 'Введите задачу'),
+                                  controller: controller,
+                                ),
+                                RaisedButton(
+                                  child: Text('Добавить'),
+                                  onPressed: () {
+                                    BlocProvider.of<TodoBloc>(context)
+                                        .add(AddItem(Todo(
+                                      task: controller.text,
+                                      id: state.todoList.length + 1 ?? 0,
+                                    )));
+                                    controller.clear();
+                                  },
+                                )
+                              ],
+                            ),
                           ),
                         );
                       });
@@ -68,6 +72,10 @@ class _MainPageState extends State<MainPage> {
                   itemBuilder: (context, index) {
                     Todo todo = state.todoList[index];
                     return Dismissible(
+                      onDismissed: (dismiss) {
+//                        BlocProvider.of<TodoBloc>(context)
+//                            .add(DeleteItem(index + 1));
+                      },
                       child: ListTile(
                         title: Text(
                           todo.task,

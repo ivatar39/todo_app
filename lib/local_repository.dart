@@ -18,10 +18,9 @@ class LocalRepository {
   List<Todo> getAllTodos() {
     Set keys = prefs.getKeys();
     return List.generate(
-      keys.length,
-      (index) => Todo.fromJson(
-          jsonDecode(prefs.getString(keys.lookup(index.toString())))),
-    );
+        keys.length,
+        (index) => Todo.fromJson(
+            jsonDecode(prefs.getString(keys.lookup((index + 1).toString())))));
   }
 
   Future<void> deleteTodo(int id) async {

@@ -19,7 +19,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       yield await fetchTodoList();
     }
     if (event is AddItem) {
-      yield TodoLoading();
+      //yield TodoLoading();
       await _repository.addTodo(event.newTodo);
       yield await fetchTodoList();
     }
@@ -32,6 +32,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   Future<TodoState> fetchTodoList() async {
     final todoList = _repository.getAllTodos();
+    print(todoList);
     return TodoLoaded(todoList);
   }
 }
